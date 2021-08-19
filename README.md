@@ -186,3 +186,6 @@ Therefore, I would like to make this rosserial communication more organized and 
     </node>
     </launch>
     ```
+
+## ![](https://via.placeholder.com/15/1589F0/000000?text=+) Example on STM32F767ZI Nucleo Board
+* usart 3, with a baudrate of 57600
