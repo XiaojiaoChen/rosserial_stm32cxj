@@ -22,25 +22,31 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	rosserialNode.RxCallback(huart);
 }
 
+
+#if SUBSCRIBER_NUMBER >= 1
+/* define your sub callback in your user file*/
+__weak void Subscriber1_CallbackFunc_Name(const Subscriber1_MessageType &msg)
+{
+	UNUSED(msg);
+}
+#endif
+
+#if SUBSCRIBER_NUMBER >= 2
 /* define your sub callback in your user file*/
 
 __weak void Subscriber2_CallbackFunc_Name(const Subscriber2_MessageType &msg)
 {
 	UNUSED(msg);
 }
+#endif
 
-/* define your sub callback in your user file*/
-__weak void Subscriber1_CallbackFunc_Name(const Subscriber1_MessageType &msg)
-{
-	UNUSED(msg);
-}
-
+#if SUBSCRIBER_NUMBER >= 3
 /* define your sub callback in your user file*/
 __weak void Subscriber3_CallbackFunc_Name(const Subscriber3_MessageType &msg)
 {
 	UNUSED(msg);
 }
-
+#endif
 RosserialNode::RosserialNode() :
 #if PUBLISHER_NUMBER >= 1
 								 Publisher1_Name(Publisher1_TopicName, &Publisher1_MessageName),

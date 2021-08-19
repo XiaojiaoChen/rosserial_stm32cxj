@@ -8,12 +8,7 @@ project(rosserial_stm32cxj)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  message_generation
-  message_runtime
-  rospy
-  rosserial_client
-  rosserial_msgs
-  std_msgs
+  message_generation  
 )
 
 ## System dependencies are found with CMake's conventions
@@ -71,10 +66,10 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate added messages and services with any dependencies listed here
-generate_messages(
-  # DEPENDENCIES
-  # rosserial_msgs#   std_msgs
-)
+# generate_messages(
+#   # DEPENDENCIES
+#   # rosserial_msgs#   std_msgs
+# )
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -108,7 +103,7 @@ generate_messages(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES rosserial_stm32cxj
-  CATKIN_DEPENDS  message_runtime rospy rosserial_client rosserial_msgs std_msgs
+  CATKIN_DEPENDS  message_runtime
 #  DEPENDS system_lib
 )
 
