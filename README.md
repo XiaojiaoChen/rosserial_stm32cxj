@@ -147,5 +147,24 @@ loop(){
 // 	rosserialNode.RxCallback(huart);
 // }
 ```
-# Advanced
-you could easily add more publishers and subscribers by modifying the rosserialNode class. 
+
+### 7. Connection with ROS Master
+1. Connect STM32 board with your ROS Master through the  specified usart.
+
+2. find your serial port in Master side in a terminal:
+```sh
+dmesg | grep tty
+```
+3. run a rosserial client in terminal as:
+```sh
+rosrun rosserial_python serial_node.py _port:=/dev/ttyACM1 _baud:=115200
+```
+or in a launch file as:
+```sh
+<launch>
+  <node pkg="rosserial_python" type="serial_node.py" name="serial_node">
+    <param name="port" value="/dev/ttyACM1"/>
+    <param name="baud" value="115200"/>
+  </node>
+</launch>
+```
