@@ -175,13 +175,13 @@ Therefore, I would like to make this rosserial communication more organized and 
     ```
 3. run a rosserial client from a terminal:
     ```sh
-    rosrun rosserial_python serial_node.py _port:=/dev/ttyACM1 _baud:=115200
+    rosrun rosserial_python serial_node.py _port:=/dev/ttyACM0 _baud:=115200
     ```
     or in a launch file:
     ```sh
     <launch>
     <node pkg="rosserial_python" type="serial_node.py" name="serial_node">
-        <param name="port" value="/dev/ttyACM1"/>
+        <param name="port" value="/dev/ttyACM0"/>
         <param name="baud" value="115200"/>
     </node>
     </launch>
