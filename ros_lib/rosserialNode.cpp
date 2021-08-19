@@ -47,6 +47,10 @@ __weak void Subscriber3_CallbackFunc_Name(const Subscriber3_MessageType &msg)
 	UNUSED(msg);
 }
 #endif
+
+
+
+
 RosserialNode::RosserialNode() :
 #if PUBLISHER_NUMBER >= 1
 								 Publisher1_Name(Publisher1_TopicName, &Publisher1_MessageName),

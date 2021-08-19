@@ -101,11 +101,13 @@
 
 #include "ros/node_handle.h"
 #include "STM32Hardware.h"
+#include "main.h"  
+//#include "stm32f1xx_hal.h" if necessary
 namespace ros{
     typedef NodeHandle_<STM32Hardware> NodeHandle; // default 25, 25, 512, 512
 }
-#include "usart.h" //try #include "stm32f1xx_hal.h" if this doesn't work
 
+extern UART_HandleTypeDef DEFAULT_ROS_HUART;
 
 class RosserialNode {
 public:
