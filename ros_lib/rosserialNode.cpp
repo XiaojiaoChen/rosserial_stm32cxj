@@ -84,6 +84,15 @@ RosserialNode::RosserialNode() :
 #if PUBLISHER_NUMBER >= 3
 	nh.advertise(Publisher3_Name);
 #endif
+#if SUBSCRIBER_NUMBER >= 1
+	nh.subscribe(Subscriber1_Name);
+#endif
+#if SUBSCRIBER_NUMBER >= 2
+	nh.subscribe(Subscriber2_Name);
+#endif
+#if SUBSCRIBER_NUMBER >= 3
+	nh.subscribe(Subscriber3_Name);
+#endif
 };
 
 void RosserialNode::setPort(UART_HandleTypeDef *huart)
