@@ -55,7 +55,7 @@ class STM32Hardware {
     const static uint16_t rbuflen = RxBufLen;
     uint8_t rbuf[rbuflen];
     uint32_t rind;
-    inline uint32_t getRdmaInd(void){ return (rbuflen - __HAL_DMA_GET_COUNTER(huart->hdmarx)) & (rbuflen - 1); }
+    inline uint32_t getRdmaInd(void){ return (rbuflen - __HAL_DMA_GET_COUNTER(roshuart->hdmarx)) & (rbuflen - 1); }
 
     const static uint16_t tbuflen = TxBufLen;
     uint8_t tbuf[tbuflen];
