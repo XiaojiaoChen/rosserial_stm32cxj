@@ -52,14 +52,14 @@ class STM32Hardware {
   protected:
     UART_HandleTypeDef *roshuart;
 
-    const static int32_t rbuflen = RxBufLen;
+    const static uint16_t rbuflen = RxBufLen;
     uint8_t rbuf[rbuflen];
     uint32_t rind;
-    inline uint32_t getRdmaInd(void){ return (rbuflen - __HAL_DMA_GET_COUNTER(roshuart->hdmarx)) & (rbuflen - 1); }
+    inline uint32_t getRdmaInd(void){ return (rbuflen - __HAL_DMA_GET_COUNTER(huart->hdmarx)) & (rbuflen - 1); }
 
-    const static int32_t tbuflen = TxBufLen;
+    const static uint16_t tbuflen = TxBufLen;
     uint8_t tbuf[tbuflen];
-    int32_t twind, tfind;
+    uint32_t twind, tfind;
 
   public:
 
@@ -95,7 +95,7 @@ class STM32Hardware {
         mutex = true;
 
         if(twind != tfind){
-          int32_t len = tfind < twind ? twind - tfind : tbuflen - tfind;
+          uint16_t len = tfind < twind ? twind - tfind : tbuflen - tfind;
           HAL_UART_Transmit_DMA(roshuart, &(tbuf[tfind]), len);
           tfind = (tfind + len) & (tbuflen - 1);
         }

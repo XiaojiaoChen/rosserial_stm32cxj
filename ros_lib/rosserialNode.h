@@ -144,6 +144,7 @@ public:
 #endif
 	UART_HandleTypeDef *rosuart;
 	ros::NodeHandle nh;
+        uint8_t initiatedFlag;
 };
 
 extern RosserialNode rosserialNode;

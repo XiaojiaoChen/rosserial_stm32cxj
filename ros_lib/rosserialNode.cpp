@@ -70,10 +70,11 @@ RosserialNode::RosserialNode() :
 #if SUBSCRIBER_NUMBER >= 3
 								 Subscriber3_Name(Subscriber3_TopicName, &Subscriber3_CallbackFunc_Name),
 #endif
-								 rosuart(&(DEFAULT_ROS_HUART))
+								rosuart(&(DEFAULT_ROS_HUART)),
+								 initiatedFlag(0)
 {
 	setPort(rosuart);
-	nh.initNode();
+
 #if PUBLISHER_NUMBER >= 1
 	nh.advertise(Publisher1_Name);
 #endif
@@ -97,6 +98,13 @@ void RosserialNode::setPort(UART_HandleTypeDef *huart)
  }*/
 void RosserialNode::spinOnce()
 {
+	//The initialization process of nh.init() has to be done after HAL Uart configurations.
+	//we combine the code here.
+	if(!initiatedFlag)
+	{
+		nh.initNode();
+		initiatedFlag=1;
+	}
 	nh.spinOnce();
 }
 
