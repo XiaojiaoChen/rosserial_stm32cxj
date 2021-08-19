@@ -8,85 +8,100 @@
 
 #include "rosserialNode.h"
 
-
-
 RosserialNode rosserialNode; //Global variable
 
-
-/*If you already have your own HAL_UART_TxCpltCallback function, just put the TxCallback() function inside of your code.and uncomment below */
-void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
+/*If you already have your own HAL_UART_TxCpltCallback function, just put the TxCallback() function inside of your code.and comment out below */
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
+{
 	rosserialNode.TxCallback(huart);
 }
 
-
-/*If you already have your own HAL_UART_RxCpltCallback function, just put the RxCallback() function inside of your code.and uncomment below */
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
+/*If you already have your own HAL_UART_RxCpltCallback function, just put the RxCallback() function inside of your code.and comment out below */
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
 	rosserialNode.RxCallback(huart);
 }
 
+/* define your sub callback in your user file*/
 
+__weak void Subscriber2_CallbackFunc_Name(const Subscriber2_MessageType &msg)
+{
+	UNUSED(msg);
+}
 
+/* define your sub callback in your user file*/
+__weak void Subscriber1_CallbackFunc_Name(const Subscriber1_MessageType &msg)
+{
+	UNUSED(msg);
+}
 
+/* define your sub callback in your user file*/
+__weak void Subscriber3_CallbackFunc_Name(const Subscriber3_MessageType &msg)
+{
+	UNUSED(msg);
+}
 
 RosserialNode::RosserialNode() :
-#if PUBLISHER_NUMBER>=1
-		Publisher1_Name(Publisher1_TopicName, &pubData1),
+#if PUBLISHER_NUMBER >= 1
+								 Publisher1_Name(Publisher1_TopicName, &Publisher1_MessageName),
 #endif
-#if PUBLISHER_NUMBER>=2
-		Publisher2_Name(Publisher2_TopicName, &pubData2),
-	#endif
-#if PUBLISHER_NUMBER>=3
-		Publisher3_Name(Publisher3_TopicName, &pubData3),
-	#endif
-#if SUBSCRIBER_NUMBER>=1
-		Subscriber1_Name(Subscriber1_TopicName, &rosserial_sub1Callback),
+#if PUBLISHER_NUMBER >= 2
+								 Publisher2_Name(Publisher2_TopicName, &Publisher2_MessageName),
 #endif
-#if SUBSCRIBER_NUMBER>=2
-		Subscriber2_Name(Subscriber2_TopicName, &rosserial_sub2Callback),
-	#endif
-#if SUBSCRIBER_NUMBER>=3
-		Subscriber3_Name(Subscriber3_TopicName, &rosserial_sub3Callback),
-	#endif
-				rosuart(&(DEFAULT_ROS_HUART)) {
+#if PUBLISHER_NUMBER >= 3
+								 Publisher3_Name(Publisher3_TopicName, &Publisher3_MessageName),
+#endif
+#if SUBSCRIBER_NUMBER >= 1
+								 Subscriber1_Name(Subscriber1_TopicName, &Subscriber1_CallbackFunc_Name),
+#endif
+#if SUBSCRIBER_NUMBER >= 2
+								 Subscriber2_Name(Subscriber2_TopicName, &Subscriber2_CallbackFunc_Name),
+#endif
+#if SUBSCRIBER_NUMBER >= 3
+								 Subscriber3_Name(Subscriber3_TopicName, &Subscriber3_CallbackFunc_Name),
+#endif
+								 rosuart(&(DEFAULT_ROS_HUART))
+{
 	setPort(rosuart);
 	nh.initNode();
-#if PUBLISHER_NUMBER>=1
-	nh.advertise(publisher1);
+#if PUBLISHER_NUMBER >= 1
+	nh.advertise(Publisher1_Name);
 #endif
-#if PUBLISHER_NUMBER>=2
-	            nh.advertise(publisher2);
-	#endif
-#if PUBLISHER_NUMBER>=3
-	            nh.advertise(publisher3);
-	#endif
+#if PUBLISHER_NUMBER >= 2
+	nh.advertise(Publisher2_Name);
+#endif
+#if PUBLISHER_NUMBER >= 3
+	nh.advertise(Publisher3_Name);
+#endif
+};
 
-}
-;
-
-void RosserialNode::setPort(UART_HandleTypeDef *huart){
+void RosserialNode::setPort(UART_HandleTypeDef *huart)
+{
 	rosuart = huart;
 	nh.getHardware()->setPort(huart);
 }
-
 
 /********************** put spinOnce() in loop routine*******************
  loop{
  rosserialNode.spinOnce();
  }*/
-void RosserialNode::spinOnce() {
+void RosserialNode::spinOnce()
+{
 	nh.spinOnce();
 }
 
-void RosserialNode::TxCallback(UART_HandleTypeDef *huart) {
-	if (rosuart == huart) {
+void RosserialNode::TxCallback(UART_HandleTypeDef *huart)
+{
+	if (rosuart == huart)
+	{
 		nh.getHardware()->flush();
 	}
 }
 
-void RosserialNode::RxCallback(UART_HandleTypeDef *huart) {
-	if (rosuart == huart) {
+void RosserialNode::RxCallback(UART_HandleTypeDef *huart)
+{
+	if (rosuart == huart)
+	{
 		nh.getHardware()->reset_rbuf();
 	}
 }
-
-
