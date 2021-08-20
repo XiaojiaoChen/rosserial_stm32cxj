@@ -2,9 +2,9 @@
 
 This is a package for ROS Serial communication with STM32Cube generated project based on two repos [rosserial_stm32](https://github.com/yoneken/rosserial_stm32) and [rosserial_stm32f7](https://github.com/fdila/rosserial_stm32f7). 
 
-Previous rosserial_stm32 packages would make the Inc/ folder swelling,  and break the original code organization.  Also, when in use, the codes are small pieces and seperated at different locations. It is not convinient to fast deploy a new stm32 project using rosserial.
+Previous rosserial_stm32 packages would make the Inc/ folder swelling,  and break the original code organization.  Also, when in use, the codes are small pieces and separated at different locations. It is not convenient to fast deploy a new stm32 project using rosserial.
 
-Therefore, this package aims to make this rosserial communication more organized and more convinient, by wrapping all the rosserial setting and initilizations underground. You could now focus more on your data flow directly. 
+Therefore, this package aims to make this rosserial communication more organized and more convenient, by wrapping all the rosserial setting and initializations underground. You could now focus more on your data flow directly. 
 
 
 ## ![](https://via.placeholder.com/15/1589F0/000000?text=+) Feature
@@ -51,11 +51,11 @@ After defining your topic and message parameters in "ros.h", then in your cpp fi
     ```
 
     * This command will generate a subfolder rosserialInc/ under your Inc/ folder. 
-    * if the STM32 project is not on the same machine, just directly run the last command, and mannualy merge the generated Inc/ folder with your STM32 project Inc/ folder.
+    * if the STM32 project is not on the same machine, just directly run the last command, and manually merge the generated Inc/ folder with your STM32 project Inc/ folder.
 
-3. Add the rosserialInc/ folder to your inlcude search path of your STM32 Project. 
+3. Add the rosserialInc/ folder to your include search path of your STM32 Project. 
 
-    * In STM32CubeIDE, this could be done by first refreshing the project, then right clicking the rosserialInc/ folder from the project exploer panel in STM32CubeIDE, and choosing "Add/Remove include path". 
+    * In STM32CubeIDE, this could be done by first refreshing the project, then right clicking the rosserialInc/ folder from the project explorer panel in STM32CubeIDE, and choosing "Add/Remove include path". 
 
 
 ## ![](https://via.placeholder.com/15/1589F0/000000?text=+) Use rosserial communication in your STM32 Project
@@ -74,7 +74,7 @@ After defining your topic and message parameters in "ros.h", then in your cpp fi
     3. sub variable names...........................(default: subData1,subData2,subData3)
     5. publisher names...............................(default: publisher1,publisher2,publisher3)
     6. subscriber names..............................(default: subscriber1,subscriber2,subscriber3)
-    7. subsciber callback function name...(default: sub1Callback,sub2Callback,sub3Callback)
+    7. subscriber callback function name...(default: sub1Callback,sub2Callback,sub3Callback)
     8. include message headers
 
         * some parameters are necessary to be modified with your application, such as the usart port, topic names,  message types, and corresponding headers.
@@ -98,14 +98,14 @@ After defining your topic and message parameters in "ros.h", then in your cpp fi
     rosserialNode.pubData1.data = 1;
     rosserialNode.publisher1.pub(&rosserialNode.pubData1);
     ```
-5. Subscribe data with implemention of your subcallback functions in your own file:
+5. Subscribe data with implementation of your subcallback functions in your own file:
     ```c
     void sub1Callback(const std_msgs::String &msg)
     {
         rosserialNode.subData1.data = msg.data;
     }
     ```
-    * your subscribe callback function name and message type should be consistant with what you have defined in "ros.h".
+    * your subscribe callback function name and message type should be consistent with what you have defined in "ros.h".
 
 6. (Optional) Adjust HAL Callback functions according to your scenario.
 
