@@ -8,8 +8,8 @@ Therefore, this package aims to make this rosserial communication more organized
 
 
 ## ![](https://via.placeholder.com/15/1589F0/000000?text=+) Feature
-* Only one generated folder for protability and cleanness
-* One global variable rosserialNode for organizing rosserial resourses with
+* Only one generated folder for portability and cleanness
+* One global variable rosserialNode for organizing rosserial resources with
     * Built-in publishers and subscribers. (maximum 3 for each currently)
     * Built-in message variables.
 * fast deployment to new project
