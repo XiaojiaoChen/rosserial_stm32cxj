@@ -2,20 +2,20 @@
 
 This is a package for ROS Serial communication with STM32Cube generated project based on two repos [rosserial_stm32](https://github.com/yoneken/rosserial_stm32) and [rosserial_stm32f7](https://github.com/fdila/rosserial_stm32f7). 
 
-Previous rosserial_stm32 packages would make the Inc/ folder swelling,  and break the original code organization.  Also, in use, the codes are small pieces and need to be placed at several locations. It is not convinient to fast deploy a new stm32 project using rosserial.
+Previous rosserial_stm32 packages would make the Inc/ folder swelling,  and break the original code organization.  Also, when in use, the codes are small pieces and seperated at different locations. It is not convinient to fast deploy a new stm32 project using rosserial.
 
 Therefore, this package aims to make this rosserial communication more organized and more convinient, by wrapping all the rosserial setting and initilizations underground. You could now focus more on your data flow directly. 
 
 
 ## ![](https://via.placeholder.com/15/1589F0/000000?text=+) Feature
-* One generated folder for protability and cleanness
-* One global variable rosserialNode for organizing resourses with
+* Only one generated folder for protability and cleanness
+* One global variable rosserialNode for organizing rosserial resourses with
     * Built-in publishers and subscribers. (maximum 3 for each currently)
     * Built-in message variables.
-* plug and play for publishing and subscribing topics
+* fast deployment to new project
 
 ## ![](https://via.placeholder.com/15/1589F0/000000?text=+) Example
-Define your topic and message parameters in "rosserialNode.h", then in your cpp file,
+After defining your topic and message parameters in "ros.h", then in your cpp file,
  ```c
  #include "ros.h"
 
@@ -50,9 +50,8 @@ Define your topic and message parameters in "rosserialNode.h", then in your cpp 
     rosrun rosserial_stm32cxj make_libraries.py .
     ```
 
-    * This command will generate a subfolder rosserialInc/ under your Inc/ folder. All rosserial files are located inside the rosserialInc/ subfolder.
+    * This command will generate a subfolder rosserialInc/ under your Inc/ folder. 
     * if the STM32 project is not on the same machine, just directly run the last command, and mannualy merge the generated Inc/ folder with your STM32 project Inc/ folder.
-
 
 3. Add the rosserialInc/ folder to your inlcude search path of your STM32 Project. 
 
@@ -60,38 +59,40 @@ Define your topic and message parameters in "rosserialNode.h", then in your cpp 
 
 
 ## ![](https://via.placeholder.com/15/1589F0/000000?text=+) Use rosserial communication in your STM32 Project
- 
+* prerequisites: make sure usart has been properly initiated, with Tx and Rx DMA Enabled, Tx and Rx Global Interrupt Enabled. and rosserialInc/ is in your include search path.
 
-1. prerequisite. 
-    * usart properly initiated, with Tx and Rx DMA Enabled, Tx and Rx Global Interrupt Enabled.
-    * rosserialInc/ is in your include search path.
+1. Define the following parameters in "ros.h":
 
-2. Include "ros.h" in your file
+    1. usart port ..........................................(default: huart3   )
+    2. publisher number. ............................(default: 1, max 3)
+    2. subscriber number.............................(default: 1, max 3)
+    3. pub topic names................................(default: "pubTopic1","pubTopic2","pubTopic3")
+    3. pub variable types.............................(default: std_msgs::String)
+    3. pub variable names...........................(default: pubData1,pubData2,pubData3)
+    3. sub topic names................................(default: "subTopic1","subTopic2","subTopic3")
+    3. sub variable types............................(default: std_msgs::String)
+    3. sub variable names...........................(default: subData1,subData2,subData3)
+    5. publisher names...............................(default: publisher1,publisher2,publisher3)
+    6. subscriber names..............................(default: subscriber1,subscriber2,subscriber3)
+    7. subsciber callback function name...(default: sub1Callback,sub2Callback,sub3Callback)
+    8. include message headers
+
+        * some parameters are necessary to be modified with your application, such as the usart port, topic names,  message types, and corresponding headers.
+
+        * some are not necessary to be changed. They have default values that you can directly use, such as built-in publishers, subscribers, message variables, callbackFunctionNames. Just suit your need.
+
+2. Include "ros.h" in your cpp file
     ```c
     #include "ros.h"
     ```
     * It has a built-in global variable named rosserialNode to manage all the rosserial resources that you can directly use.
 
-3. Define parameters in "rosserialNode.h":
-
-        1. usart port ..........................................(default: huart3   )
-        2. publisher number. ............................(default: 1, max 3)
-        2. subscriber number.............................(default: 1, max 3)
-        3. pub topic names................................(default: "pubTopic1","pubTopic2","pubTopic3")
-        3. pub variable types.............................(default: std_msgs::String)
-        3. pub variable names...........................(default: pubData1,pubData2,pubData3)
-        3. sub topic names................................(default: "subTopic1","subTopic2","subTopic3")
-        3. sub variable types............................(default: std_msgs::String)
-        3. sub variable names...........................(default: subData1,subData2,subData3)
-        5. publisher names...............................(default: publisher1,publisher2,publisher3)
-        6. subscriber names..............................(default: subscriber1,subscriber2,subscriber3)
-        7. subsciber callback function name...(default: sub1Callback,sub2Callback,sub3Callback)
-        8. include message headers
-
-      * some parameters are necessary to be modified with your application, such as the usart port, topic names,  message types, and corresponding headers.
-
-      * some are not necessary to be changed. They have default values that you can directly use, such as built-in publishers, subscribers, message variables, callbackFunctionNames. Just suit your need.
-    
+3. Add spinOnce() routine to your loop:
+    ```c
+    loop(){
+        rosserialNode.spinOnce();
+    }
+    ```
 4. publish data with
     ```c
     rosserialNode.pubData1.data = 1;
@@ -104,16 +105,9 @@ Define your topic and message parameters in "rosserialNode.h", then in your cpp 
         rosserialNode.subData1.data = msg.data;
     }
     ```
-    * your subscribe callback function name and message type should be consistant with what you have defined previously. 
-    * If you didn't define your callback function name, you could use the default name sub1Callback directly.
+    * your subscribe callback function name and message type should be consistant with what you have defined in "ros.h".
 
-6. Add spinOnce() routine to your loop:
-    ```c
-    loop(){
-        rosserialNode.spinOnce();
-    }
-    ```
-7. (Optional) Adjust HAL Callback functions according to the needs.
+6. (Optional) Adjust HAL Callback functions according to your scenario.
 
     * This package has built-in HAL_UART_TxCpltCallback and HAL_UART_RxCpltCallback functions in "rosserialNode.cpp" as
         ```c
@@ -170,3 +164,6 @@ Define your topic and message parameters in "rosserialNode.h", then in your cpp 
     </launch>
     ```
 
+## ![](https://via.placeholder.com/15/1589F0/000000?text=+) Acknowledgement
+* [rosserial_stm32 by yoneken](https://github.com/yoneken/rosserial_stm32)
+* [rosserial_stm32f7 by fdila](https://github.com/fdila/rosserial_stm32f7). 
