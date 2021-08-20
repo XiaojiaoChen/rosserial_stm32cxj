@@ -2,18 +2,34 @@
 
 This is a package for ROS Serial communication with STM32Cube generated project based on two repos [rosserial_stm32](https://github.com/yoneken/rosserial_stm32) and [rosserial_stm32f7](https://github.com/fdila/rosserial_stm32f7). 
 
-Previously when using rosserial_stm32 packages, they make my Inc/ folder swelled and broken my whole code hiarchkey.  Also, the related codes are seperated small pieces that need to be placed at different locations. This causes that everytime when I use rosserial on different project, I need to find a example template.
+Previous rosserial_stm32 packages would make the Inc/ folder swelling,  and break the original code organization.  Also, in use, the codes are small pieces and need to be placed at several locations. It is not convinient to fast deploy a new stm32 project using rosserial.
 
-Therefore, I would like to make this rosserial communication more organized and more convinient to use, aiming at:
-1. making the stm32 code clean
-2. plug and play
+Therefore, this package aims to make this rosserial communication more organized and more convinient, by wrapping all the rosserial setting and initilizations underground. You could now focus more on your data flow directly. 
 
 
 ## ![](https://via.placeholder.com/15/1589F0/000000?text=+) Feature
-* Built-in publishers and subscribers. (maximum 3 for each currently)
-* Built-in message variables.
-* Built-in global variable named rosserialNode for handleing all the built-in resources.
+* One generated folder for protability and cleanness
+* One global variable rosserialNode for organizing resourses with
+    * Built-in publishers and subscribers. (maximum 3 for each currently)
+    * Built-in message variables.
+* plug and play for publishing and subscribing topics
 
+## ![](https://via.placeholder.com/15/1589F0/000000?text=+) Example
+    ```c
+    #include "ros.h"
+    
+    void sub1Callback(const std_msgs::String &msg){ //receive data
+        rosserialNode.subData1.data = msg.data;
+    }
+
+    void loop(){
+        rosserialNode.pubData1.data=1;
+        rosserialNode.publisher1.publish(&rosserialNode.pubData1);//transmit data
+        
+        rosserialNode.spinOnce();
+        HAL_Delay(10);
+    }
+    ```
 ## ![](https://via.placeholder.com/15/1589F0/000000?text=+) Usage
 1. Install this ROS package
     ```sh
@@ -187,5 +203,3 @@ Therefore, I would like to make this rosserial communication more organized and 
     </launch>
     ```
 
-## ![](https://via.placeholder.com/15/1589F0/000000?text=+) Example on STM32F767ZI Nucleo Board
-* usart 3, with a baudrate of 57600
