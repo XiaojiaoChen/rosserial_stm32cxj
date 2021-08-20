@@ -15,21 +15,22 @@ Therefore, this package aims to make this rosserial communication more organized
 * plug and play for publishing and subscribing topics
 
 ## ![](https://via.placeholder.com/15/1589F0/000000?text=+) Example
-    ```c
-    #include "ros.h"
-    
-    void sub1Callback(const std_msgs::String &msg){ //receive data
-        rosserialNode.subData1.data = msg.data;
-    }
+Define your topic and message parameters in "rosserialNode.h", then in your cpp file,
+ ```c
+ #include "ros.h"
 
-    void loop(){
-        rosserialNode.pubData1.data=1;
-        rosserialNode.publisher1.publish(&rosserialNode.pubData1);//transmit data
-        
-        rosserialNode.spinOnce();
-        HAL_Delay(10);
-    }
-    ```
+ void sub1Callback(const std_msgs::String &msg){ //receive data
+     rosserialNode.subData1.data = msg.data; 
+ }
+
+ void loop(){
+     rosserialNode.pubData1.data=1;
+     rosserialNode.publisher1.publish(&rosserialNode.pubData1);//transmit data
+
+     rosserialNode.spinOnce();
+     HAL_Delay(10);
+ }
+ ```
 ## ![](https://via.placeholder.com/15/1589F0/000000?text=+) Usage
 1. Install this ROS package
     ```sh
@@ -69,17 +70,10 @@ Therefore, this package aims to make this rosserial communication more organized
     ```c
     #include "ros.h"
     ```
-    * It has a built-in global variable named rosserialNode to manage all the rosserial resources, already exported as below. You can directly use this variable only if "ros.h" is inlcuded.
-        ```c
-        //No need to add to your file, you can directly use this variable if "ros.h" is included
-        extern RosserialNode rosserialNode; 
-        ```
+    * It has a built-in global variable named rosserialNode to manage all the rosserial resources that you can directly use.
+
 3. Define parameters in "rosserialNode.h":
 
-    * some parameters are necessary to be modified with your application, such as the usart port, topic names,  message types, and corresponding headers.
-
-    * some are not necessary to be changed. They have default values that you can directly use, such as built-in publishers, subscribers, message variables, callbackFunctionNames. Just suit your need.
-    
         1. usart port ..........................................(default: huart3   )
         2. publisher number. ............................(default: 1, max 3)
         2. subscriber number.............................(default: 1, max 3)
@@ -94,37 +88,10 @@ Therefore, this package aims to make this rosserial communication more organized
         7. subsciber callback function name...(default: sub1Callback,sub2Callback,sub3Callback)
         8. include message headers
 
-    * A glimpse of the code in "rosserialNode.h" is:
+      * some parameters are necessary to be modified with your application, such as the usart port, topic names,  message types, and corresponding headers.
 
-        ```c
-        #include "std_msgs/Float64.h"		//include messageType headers
-
-        #include "std_msgs/String.h"		//include messageType headers
-
-        #define DEFAULT_ROS_HUART huart3
-
-        #define PUBLISHER_NUMBER 1
-
-        #define SUBSCRIBER_NUMBER 1
-
-        #define Publisher1_TopicName    	"pubTopic1"
-
-        #define Publisher1_MessageName  	pubData1 
-
-        #define Publisher1_MessageType  	std_msgs::Float64 
-
-        #define Publisher1_Name		  		publisher1
-
-        #define Subscriber1_TopicName 			"subTopic1" 
-
-        #define Subscriber1_MessageName 		subData1 
-
-        #define Subscriber1_MessageType 		std_msgs::String 
-
-        #define Subscriber1_Name		  		subscriber1	
-
-        #define Subscriber1_CallbackFunc_Name   sub1Callback  
-        ```
+      * some are not necessary to be changed. They have default values that you can directly use, such as built-in publishers, subscribers, message variables, callbackFunctionNames. Just suit your need.
+    
 4. publish data with
     ```c
     rosserialNode.pubData1.data = 1;
