@@ -17,7 +17,7 @@
  * 4. Implement your subscriber callback function in your file
  * 5. (optional*) if you have your own HAL_UART_TxCpltCallback or HAL_UART_RxCpltCallback implemented,
  * 	  add the content under the same name in RosserialNode.cpp to your version, and comment the version in RosserialNode.cpp.
- *
+ *      
  * example usage(with default value):
  * 1.pubData1.data = 1;
  *	rosserialNode.publisher1.pub(&pubData1);
@@ -29,12 +29,12 @@
  */
 
 
-
 /*********************************************************************************************
 **********************************  	              	  ************************************
 **********************************  Configuration  Zone   ************************************
 **********************************  	   BEGIN     	  ***********************************
 ********************************************************************************************/
+/*USER CODE BEGIN*/
 
 #include "std_msgs/Float64.h"		//include messageType headers
 
@@ -86,14 +86,13 @@
 #define Subscriber3_Name		  		subscriber3					//name a subscriber for this topic
 #define Subscriber3_CallbackFunc_Name   sub3Callback                //define your sub callback function name
 #endif
+
+/*USER CODE END*/
 /*********************************************************************************************
 **********************************  	              	  	************************************
 **********************************  Configuration  Zone  	************************************
 **********************************  	   END     	  		***********************************
 ********************************************************************************************/
-
-
-
 
 
 
@@ -106,50 +105,7 @@
 namespace ros{
     typedef NodeHandle_<STM32Hardware> NodeHandle; // default 25, 25, 512, 512
 }
-
-extern UART_HandleTypeDef DEFAULT_ROS_HUART;
-
-class RosserialNode {
-public:
-	RosserialNode();
-	void setPort(UART_HandleTypeDef *huart);
-	void spinOnce(void);
-	void TxCallback(UART_HandleTypeDef *huart);
-	void RxCallback(UART_HandleTypeDef *huart);
-
-#if PUBLISHER_NUMBER >= 1
-	Publisher1_MessageType Publisher1_MessageName;
-	ros::Publisher Publisher1_Name;
-#endif
-#if PUBLISHER_NUMBER >= 2
-        Publisher2_MessageType Publisher2_MessageName;
-        ros::Publisher Publisher2_Name;
-#endif
-#if PUBLISHER_NUMBER >= 3
-        Publisher3_MessageType Publisher3_MessageName;
-        ros::Publisher Publisher3_Name;
-#endif
-
-#if SUBSCRIBER_NUMBER >= 1
-	Subscriber1_MessageType Subscriber1_MessageName;
-	ros::Subscriber<Subscriber1_MessageType> Subscriber1_Name;
-#endif
-#if SUBSCRIBER_NUMBER >= 2
-        Subscriber2_MessageType Subscriber2_MessageName;
-        ros::Subscriber<Subscriber2_MessageType> Subscriber2_Name;
-#endif
-#if SUBSCRIBER_NUMBER >= 3
-        Subscriber3_MessageType Subscriber3_MessageName;
-        ros::Subscriber<Subscriber3_MessageType> Subscriber3_Name;
-#endif
-	UART_HandleTypeDef *rosuart;
-	ros::NodeHandle nh;
-        uint8_t initiatedFlag;
-};
-
-extern RosserialNode rosserialNode;
-
-
+#include "rosserialNode.h"
 
 
 

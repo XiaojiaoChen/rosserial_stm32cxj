@@ -125,11 +125,16 @@ if not os.path.isdir(desPath):
 
 roslib_Path = os.path.join(rospack.get_path(THIS_PACKAGE) , "ros_lib")
 print("\nExport Interfaces files ros.h and STM32Hardware.h to %s", desPath)
+userbeginStr = "/*USER CODE BEGIN*/"
+userendStr = "/*USER CODE BEGIN*/"
+userready=0
+readReady=-1
 files = os.listdir(roslib_Path)
 for f in files:
     file = os.path.join(roslib_Path,f)
     if os.path.isfile(file):
-        shutil.copy(file, desPath)
+        if not (f == 'ros.h' and os.path.exists(os.path.join(desPath,f))):
+            shutil.copy(file, desPath)
 
 
 print("\nExport message_headers to %s", desPath)
