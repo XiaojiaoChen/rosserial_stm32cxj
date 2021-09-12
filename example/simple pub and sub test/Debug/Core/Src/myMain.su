@@ -1,4 +1,0 @@
-publisher.h:53:7:int ros::Publisher::publish(const ros::Msg*)	16	static
-myMain.cpp:6:6:void sub1Callback(const std_msgs::String&)	16	static
-myMain.cpp:10:6:void setup()	4	static
-myMain.cpp:15:6:void loop()	8	static

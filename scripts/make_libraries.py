@@ -37,40 +37,22 @@ THIS_PACKAGE = "rosserial_stm32cxj"
 
 __usage__ = """
 
-This package generates files used in your STM32 Project for ROS serial communication.
-The aim of this package is try not to mess your STM32 project file organization. 
-
-All files are within the generated rosserialInc/ folder, therefore, you only need to manually include this folder in your STM32 include search path.
-Method: right click this folder in your STM32CUBEIDE project explorer, click add to inlcude path>
-
 Usage: 
 
-1. anywhere, run:
+cd anywhere
 
 rosrun rosserial_stm32cxj make_libraries.py .
 
-Merge the generated Inc/ folder to the target STM32 project Inc folder
+Copy the rosserialInc/ folder to your stm32 project 
+Add  the rosserialInc/ folder to your stm32 project  inlcude and source path
 
-add the rosserialInc/ folder to your inlcude search path
-
-or 
-
-2. Inside a STM32 Project folder that contains a subfolder Inc/, direct run the command
-
-rosrun rosserial_stm32cxj make_libraries.py .
-
-add the rosserialInc/ folder to your inlcude search path
 
 """
 
 __postWords__ = """
-
-Successfully generate rosserial_stm32 libraries in Inc/rosserialInc/.
-
 YOU NEED TO:
-
-Add the rosserialInc/ folder to your inlcude search path of your STM32 Project
-
+1. copy the rosserialInc/ folder to your STM32 project.
+2. Add  the rosserialInc/ folder to your stm32 project  inlcude and source path
 """
 
 import rospkg
@@ -102,12 +84,15 @@ ROS_TO_EMBEDDED_TYPES = {
 }
 
 # need correct inputs
-if (len(sys.argv) < 2):
+if (len(sys.argv) < 1):
     print(__usage__)
     exit()
-    
-# valid output path
-path = sys.argv[1]
+
+path = ""
+if (len(sys.argv)==1):
+    path = '.'#current path
+else:
+    path = sys.argv[1]
 if not (os.path.isdir(path)):
     print("%s is not a valid output folder path",path)
     exit()
@@ -115,7 +100,8 @@ path = os.path.abspath(path)
 
 rospack = rospkg.RosPack()
 
-targetPath = os.path.join(path,"Inc")
+targetPath = path
+# targetPath = os.path.join(path,"Inc")
 if not os.path.isdir(targetPath):
     os.mkdir(targetPath)
 
@@ -125,22 +111,21 @@ if not os.path.isdir(desPath):
 
 roslib_Path = os.path.join(rospack.get_path(THIS_PACKAGE) , "ros_lib")
 print("\nExport Interfaces files ros.h and STM32Hardware.h to %s", desPath)
-userbeginStr = "/*USER CODE BEGIN*/"
-userendStr = "/*USER CODE BEGIN*/"
-userready=0
-readReady=-1
+
 files = os.listdir(roslib_Path)
 for f in files:
     file = os.path.join(roslib_Path,f)
     if os.path.isfile(file):
-        if not (f == 'ros.h' and os.path.exists(os.path.join(desPath,f))):
+        if not (f == 'rosserialNode.cpp' and os.path.exists(os.path.join(desPath,f))):
             shutil.copy(file, desPath)
-
+            print("Copied f ", desPath)
 
 print("\nExport message_headers to %s", desPath)
 rosserial_client_copy_files(rospack, desPath)
 
 # generate messages
 rosserial_generate(rospack, desPath, ROS_TO_EMBEDDED_TYPES)
-
+print("")
+print("")
+print("Successfully generate rosserial_stm32 libraries in {}".format(desPath))
 print(__postWords__)

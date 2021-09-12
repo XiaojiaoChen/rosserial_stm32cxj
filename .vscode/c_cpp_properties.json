@@ -1,0 +1,19 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "",
+        "limitSymbolsToIncludedHeaders": true
+      },
+      "includePath": [
+        "/home/softarm/catkin_ws/devel/include/**",
+        "/opt/ros/noetic/include/**",
+        "/home/softarm/catkin_ws/src/hydrosoft_ros/include/**",
+        "/home/softarm/catkin_ws/src/origarm_ros/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS"
+    }
+  ],
+  "version": 4
+}
